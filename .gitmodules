@@ -1,0 +1,3 @@
+[submodule "hoverboard/hoverboard-firmware-hack"]
+	path = hoverboard/hoverboard-firmware-hack
+	url = https://github.com/NiklasFauth/hoverboard-firmware-hack.git
