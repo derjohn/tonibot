@@ -27,7 +27,7 @@ stprobe:
 	docker run -it --privileged flash-container st-info --probe
 
 stflash:
-	docker run -it --privileged -v $(HOVERFWDIR)/$(HOVERFWFILE):/$(HOVERFWFILE) flash-container st-flash --reset write /$(HOVERFWFILE) 0x8000000
+	docker run -it --privileged -v $(HOVERFWDIR)/$(HOVERFWFILE):/$(HOVERFWFILE) flash-container sh -c "st-flash --reset write /$(HOVERFWFILE) 0x8000000"
 
 stshell:
 	docker run -it --privileged -v $(HOVERFWDIR)/$(HOVERFWFILE):/$(HOVERFWFILE) flash-container sh
