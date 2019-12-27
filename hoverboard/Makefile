@@ -11,10 +11,9 @@ firmware-submodule:
 
 firmware-container:
 	cd firmware-container; docker build . -t firmware-container; cd ..
-	docker run -it --rm -v $(MAKEFILEDIR)/hoverboard-firmware-hack:/tmp firmware-container
 
 firmware:
-	docker run --privileged -v $(HOVERFWDIR):/opt firmware-container bash
+	docker run -it --rm -v $(MAKEFILEDIR)/hoverboard-firmware-hack:/tmp firmware-container bash -c "cd /tmp; make"
 
 ### Flash
 
