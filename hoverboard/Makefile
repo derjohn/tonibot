@@ -1,11 +1,14 @@
 .PHONY: firmware-container flash-container
 HOVERFWDIR=$(shell pwd)/hoverboard-firmware-hack/build
 HOVERFWFILE=hover.bin
+MAKEFILEDIR=$(shell pwd)
+
 
 ### Firmware Build
 
 firmware-container:
-	cd firmware-container; docker build . -t firmware-container
+	cd firmware-container; docker build . -t firmware-container; cd ..
+	docker run -it --rm -v $(MAKEFILEDIR)/hoverboard-firmware-hack:/tmp firmware-container
 
 firmware:
 	git submodule update --init; docker run --privileged -v $(HOVERFWDIR):/opt firmware-container bash
