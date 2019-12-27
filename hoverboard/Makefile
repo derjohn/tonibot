@@ -6,12 +6,15 @@ MAKEFILEDIR=$(shell pwd)
 
 ### Firmware Build
 
+firmware-submodule:
+	git submodule update --init
+
 firmware-container:
 	cd firmware-container; docker build . -t firmware-container; cd ..
 	docker run -it --rm -v $(MAKEFILEDIR)/hoverboard-firmware-hack:/tmp firmware-container
 
 firmware:
-	git submodule update --init; docker run --privileged -v $(HOVERFWDIR):/opt firmware-container bash
+	docker run --privileged -v $(HOVERFWDIR):/opt firmware-container bash
 
 ### Flash
 
