@@ -1,3 +1,6 @@
 [submodule "hoverboard/hoverboard-firmware-hack"]
 	path = hoverboard/hoverboard-firmware-hack
 	url = https://github.com/derjohn/hoverboard-firmware-hack.git
+[submodule "hoverboard/bipropellant-hoverboard-firmware"]
+	path = hoverboard/bipropellant-hoverboard-firmware
+	url = https://github.com/bipropellant/bipropellant-hoverboard-firmware.git

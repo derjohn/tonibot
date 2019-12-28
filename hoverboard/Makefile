@@ -6,18 +6,26 @@ MAKEFILEDIR=$(shell pwd)
 
 ### Firmware Build
 
+firmware-container:
+	cd firmware-container; docker build . -t firmware-container
+
 firmware-submodule:
 	git submodule update --init
 
-firmware-container:
-	cd firmware-container; docker build . -t firmware-container; cd ..
+### Transpotter Firmware Build
 
-firmware:
-	docker run -it --rm -v $(MAKEFILEDIR)/hoverboard-firmware-hack:/tmp firmware-container bash -c "cd /tmp; make"
+transpotter-firmware:
+	docker run -it --rm -v $(MAKEFILEDIR)/hoverboard-firmware-hack:/tmp firmware-container sh -c "cd /tmp; make"
+
+### Bipropellant Firmware Build
+
+bipropellant-firmware:
+	cd ./bipropellant-hoverboard-firmware; git submodule update --init
+	docker run -it --rm -v $(MAKEFILEDIR)/bipropellant-hoverboard-firmware:/tmp -v $(MAKEFILEDIR)/bipropellant-config.h:/tmp/inc/config.h firmware-container sh -c "cd /tmp; make"
 
 ### Flash
 
-flash-container:
+build-flash-container:
 	cd flash-container; docker build . -t flash-container
 
 stversion:
@@ -26,7 +34,7 @@ stversion:
 stprobe:
 	docker run -it --privileged flash-container st-info --probe
 
-stflash:
+stflash-firmware:
 	docker run -it --privileged -v $(HOVERFWDIR)/$(HOVERFWFILE):/$(HOVERFWFILE) flash-container sh -c "st-flash --reset write /$(HOVERFWFILE) 0x8000000"
 
 stshell:
