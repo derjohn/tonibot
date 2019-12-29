@@ -11,6 +11,9 @@
 #define SOFTWARE_SERIAL_A2_A3 4
 #define HOVERBOARD_WITH_SOFTWARE_SERIAL_B2_C9_6WORDSENSOR 5
 #define HOVERBOARD 6
+#define GAMETRAK_PLUS_SOFTWARE_SERIAL 7
+
+#define CONTROL_TYPE GAMETRAK_PLUS_SOFTWARE_SERIAL
 
 // thoery says this is the only thing you need to change....
 // Can also be preset from platformio.ini when using platform.io build environment
@@ -20,7 +23,7 @@
 //////////////////////////////////////////////////////////
 
 //////////////////////////////////////////////////////////
-// implementaiton of specific for macro control types
+// implementation of specific for macro control types
 // provide a short explaination here
 #if (CONTROL_TYPE == HOVERBOARD)
   // this control type allows the board to be used AS a hoverboard,
@@ -116,7 +119,7 @@
 #endif
 
 
-// implementaiton of specific for macro control types
+// implementation of specific for macro control types
 #if (CONTROL_TYPE == USART2_CONTROLLED)
   // hoverboard sensor functionality is disabled
   // and control is via USART2
@@ -126,13 +129,46 @@
 #endif
 
 
-// implementaiton of specific for macro control types
+// implementation of specific for macro control types
 #if (CONTROL_TYPE == USART3_CONTROLLED)
   // hoverboard sensor functionality is disabled
   // and control is via USART3
   #define INCLUDE_PROTOCOL INCLUDE_PROTOCOL2
   #define SERIAL_USART3_IT
   #define PASE_ADV_ENA 0
+#endif
+
+// implementation for gametrak + serial commands
+#if (CONTROL_TYPE == GAMETRAK_PLUS_SOFTWARE_SERIAL)
+  // hoverboard sensor functionality is disabled
+  // Serial in USART3 ("right one") 
+  #define PASE_ADV_ENA 0
+  // Enable steering
+  // #define SERIAL_USART3_IT
+  // #define INCLUDE_PROTOCOL INCLUDE_PROTOCOL2
+  // OR enable DEBUG OUTPUT
+  #define DEBUG_SERIAL_USART3 1
+  #define DEBUG_SERIAL_ASCII 1
+  #define DEBUG_BAUD 9600
+
+  // Gametrak on USART2 ("left one")
+  #undef DEBUG_SERIAL_USART2
+  #define CONTROL_ADC               // use ADC as input. disable DEBUG_SERIAL_USART2!
+
+  // Settings stolen from WIKI
+  #define ADC1_MIN         0        // min ADC1-value while poti at minimum-position (0 - 4095)
+  #define ADC1_ZERO     1700        // ADC1-value while poti at zero-position (0 - 4095)
+  #define ADC1_MAX      4095        // max ADC1-value while poti at maximum-position (0 - 4095)
+  #define ADC1_MULT_NEG 1300.0f     // Use 1000.0f to calibrate from MIN to MAX
+  #define ADC1_MULT_POS 3000.0f     // Use 1000.0f to calibrate from MIN to MAX
+  #define ADC_OFF_START    0          // Start Value of Area at which other inputs can be active (0 - 4095) Applies to Speed ADC
+  #define ADC_OFF_END      1200       // End Value of Area at which other inputs can be active (0 - 4095) Applies to Speed ADC
+  #define ADC_OFF_FILTER 0.1          // Additional low pass Filter applied only to ADC Off functionality. 1.0=No Filter, 0.1 lots of Filtering
+  #define ADC_SWITCH_CHANNELS 1       // define if ADC1 is used for Steer and ADC2 for Speed
+
+
+  #define INVERT_R_DIRECTION 1
+
 #endif
 
 
@@ -320,6 +356,7 @@
 // ###### CONTROL VIA TWO POTENTIOMETERS ######
 // ADC-calibration to cover the full poti-range: connect potis to left sensor board cable (0 to 3.3V) (do NOT use the red 15V wire in the cable!). see <How to calibrate>. turn the potis to minimum position, write value 1 to ADC1_MIN and value 2 to ADC2_MIN. turn to maximum position and repeat it for ADC?_MAX. make, flash and test it.
 // Check out https://github.com/bipropellant/bipropellant-hoverboard-firmware/wiki/ADC-Configurations for sample configurations.
+
 
 //#define CONTROL_ADC               // use ADC as input. disable DEBUG_SERIAL_USART2!
 #ifndef ADC1_MIN
